@@ -2,18 +2,18 @@
 {
     internal class Position
     {
-        public int row { get; set; }
-        public int column { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
 
         public Position(int row, int column)
         {
-            this.row = row;
-            this.column = column;
+            Row = row;
+            Column = column;
         }
 
         public override string ToString()
         {
-            return $"{row}, {column}";
+            return $"{Row}, {Column}";
         }
     }
 }

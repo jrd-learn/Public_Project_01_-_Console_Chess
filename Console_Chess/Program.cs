@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Chessboard;
+﻿using Chessboard;
 
 namespace Console_Chess
 {
@@ -8,10 +6,11 @@ namespace Console_Chess
     {
         static void Main(string[] args)
         {
-            Position P;
-            P = new Position(3, 4);
+            Board board = new Board(8, 8);
 
-            Console.WriteLine($"Posição: {P}");
+            Screen.PrintBoard(board);
+
+            Console.ReadLine();
         }
     }
 }
