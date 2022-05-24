@@ -3,12 +3,11 @@ namespace Chessboard
 {
     internal enum Color
     {
-        White,
-        Black,
+        White,        
         Yellow,
-        Blue,
+        Cyan,
         Red,
         Green,
-        Orange
+        Magenta
     }
 }

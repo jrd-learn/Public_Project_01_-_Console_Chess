@@ -6,21 +6,71 @@ namespace Console_Chess
     {
         public static void PrintBoard(Board board)
         {
-            for(int i = 0; i < board.Rows; i++)
+            for (int i = 0; i < board.Rows; i++)
             {
-                for(int j = 0; j < board.Columns; j++)
+                Console.Write($"{8 - i} ");
+
+                for (int j = 0; j < board.Columns; j++)
                 {
-                    if (board.Piece(i,j) == null)
+                    if (board.Piece(i, j) == null)
                     {
                         Console.Write("- ");
                     }
                     else
                     {
-                        Console.Write($"{board.Piece(i, j)} ");
-                    }                    
+                        PrintPiece(board.Piece(i, j));
+                    }
                 }
 
                 Console.WriteLine();
+            }
+
+            Console.WriteLine("  A B C D E F G H");
+        }
+
+        public static void PrintPiece(Piece piece)
+        {
+            if (piece.Color == Color.White)
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
+            }
+            else if (piece.Color == Color.Yellow)
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
+            }
+            else if (piece.Color == Color.Cyan)
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
+            }
+            else if (piece.Color == Color.Red)
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
+            }
+            else if (piece.Color == Color.Green)
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
+            }
+            else 
+            {
+                ConsoleColor consoleColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write(piece);
+                Console.ForegroundColor = consoleColor;
             }
         }
     }
