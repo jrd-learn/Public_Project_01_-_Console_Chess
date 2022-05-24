@@ -18,5 +18,12 @@
             return pieces[row, column];
         }
 
+        public void InputPiece(Piece piece, Position position)
+        {
+            pieces[position.Row, position.Column] = piece;
+
+            piece.Position = position;
+        }
+
     }
 }
