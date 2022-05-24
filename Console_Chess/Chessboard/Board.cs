@@ -32,7 +32,8 @@
 
         public void InputPiece(Piece piece, Position position)
         {
-            if (CheckPiece(position){
+            if (CheckPiece(position))
+            {
                 throw new BoardExceptions("There is already a piece in this position!");
             }
 
