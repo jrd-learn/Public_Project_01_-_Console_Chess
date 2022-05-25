@@ -1,5 +1,5 @@
 ﻿using Chessboard;
-using ChessPieces;
+using Chess;
 
 namespace Console_Chess
 {
@@ -9,17 +9,21 @@ namespace Console_Chess
         {
             try
             {
-                Board board = new Board(8, 8);
+                ChessGame chessGame = new ChessGame();
 
-                board.InputPiece(new Rook(board, Color.Magenta), new Position(0, 1));
-                board.InputPiece(new Rook(board, Color.Magenta), new Position(0, 2));
-                board.InputPiece(new King(board, Color.Magenta), new Position(0, 3));
-                
-                board.InputPiece(new King(board, Color.Cyan), new Position(7, 1));
-                board.InputPiece(new King(board, Color.Cyan), new Position(7, 2));
-                board.InputPiece(new King(board, Color.Cyan), new Position(7, 3));
+                while (!chessGame.GameOver)
+                {
+                    Console.Clear();
+                    Screen.PrintBoard(chessGame.Board);
+                    
+                    Console.WriteLine();
+                    Console.Write("Source: ");
+                    Position source = Screen.InputPiecePosition().ToPiecePosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.InputPiecePosition().ToPiecePosition();
 
-                Screen.PrintBoard(board);
+                    chessGame.ExecuteMovement(source, destiny);
+                }                
             }
             catch (BoardExceptions e)
             {

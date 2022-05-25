@@ -1,6 +1,6 @@
 ﻿using Chessboard;
 
-namespace ChessPieces
+namespace Chess
 {
     internal class PiecePosition
     {

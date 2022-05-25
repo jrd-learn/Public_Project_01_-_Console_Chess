@@ -30,7 +30,21 @@
             return Piece(position) != null;
         }
 
-        public void InputPiece(Piece piece, Position position)
+        public Piece RemovePiece(Position position)
+        {
+            if(Piece(position) == null)
+            {
+                return null;
+            }
+
+            Piece tempPiece = Piece(position);
+            tempPiece.Position = null;
+            pieces[position.Row, position.Column] = null;
+
+            return tempPiece;
+        }
+
+        public void InsertPiece(Piece piece, Position position)
         {
             if (CheckPiece(position))
             {

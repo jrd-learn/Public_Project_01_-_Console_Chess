@@ -1,6 +1,6 @@
 ﻿using Chessboard;
 
-namespace ChessPieces
+namespace Chess
 {
     internal class Rook : Piece
     {
@@ -10,7 +10,7 @@ namespace ChessPieces
 
         public override string ToString()
         {
-            return "T";
+            return "T ";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Chessboard;
+using Chess;
 
 namespace Console_Chess
 {
@@ -8,7 +9,7 @@ namespace Console_Chess
         {
             for (int i = 0; i < board.Rows; i++)
             {
-                Console.Write($"{8 - i} ");
+                Console.Write($"{8 - i}  ");
 
                 for (int j = 0; j < board.Columns; j++)
                 {
@@ -18,14 +19,22 @@ namespace Console_Chess
                     }
                     else
                     {
-                        PrintPiece(board.Piece(i, j));
+                        Screen.PrintPiece(board.Piece(i, j));
                     }
                 }
 
                 Console.WriteLine();
             }
 
-            Console.WriteLine("  A B C D E F G H");
+            Console.WriteLine("+  A B C D E F G H");
+        }
+
+        public static PiecePosition InputPiecePosition()
+        {
+            string piecePosition = Console.ReadLine();
+            char column = piecePosition[0];
+            int row = int.Parse($"{piecePosition[1]}");
+            return new PiecePosition(column, row);
         }
 
         public static void PrintPiece(Piece piece)
