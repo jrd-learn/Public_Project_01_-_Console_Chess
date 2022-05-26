@@ -6,8 +6,8 @@ namespace Chess
     internal class ChessGame
     {
         public Board Board { get; private set; }
-        private int Turn;
-        private Color CurrentPlayer;
+        public int Turn { get; private set; }
+        public Color CurrentPlayer { get; private set; }
         public bool GameOver { get; private set; }
 
         public ChessGame()
@@ -28,6 +28,48 @@ namespace Chess
             Board.InsertPiece(piece, destiny);
         }
 
+        public void ExecutePlay(Position source, Position destiny)
+        {
+            ExecuteMovement(source, destiny);
+            Turn++;
+            ChangePlayer();
+        }
+
+        public void ValidateSourcePosition(Position position)
+        {
+            if (Board.Piece(position) == null)
+            {
+                throw new BoardExceptions("There is no piece in this source position!");
+            }
+            if (CurrentPlayer != Board.Piece(position).Color)
+            {
+                throw new BoardExceptions("The current player is not owner of this piece in source position!");
+            }
+            if (!Board.Piece(position).CheckPossibleMoves())
+            {
+                throw new BoardExceptions("There is no moves allowed to this piece in source position!");
+            }
+        }
+
+        public void ValidateDestinyPosition(Position source, Position destiny)
+        {
+            if (!Board.Piece(source).CanMoveTo(destiny))
+            {
+                throw new BoardExceptions("Invalid destiny position!");
+            }
+        }
+
+        private void ChangePlayer()
+        {
+            if (CurrentPlayer == Color.Cyan)
+            {
+                CurrentPlayer = Color.Magenta;
+            }
+            else
+            {
+                CurrentPlayer = Color.Cyan;
+            }
+        }
         private void PutPieces()
         {
             Board.InsertPiece(new Rook(Board, Color.Cyan), new PiecePosition('a', 1).ToPiecePosition());

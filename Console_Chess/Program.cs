@@ -13,24 +13,39 @@ namespace Console_Chess
 
                 while (!chessGame.GameOver)
                 {
-                    Console.Clear();
-                    Screen.PrintBoard(chessGame.Board);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.PrintBoard(chessGame.Board);
+                        Console.WriteLine();
+                        Console.WriteLine($"Turn: {chessGame.Turn}");
+                        Console.WriteLine($"Waiting player: {chessGame.CurrentPlayer}");
+
+                        Console.WriteLine();
+                        Console.Write("Source: ");
+                        Position source = Screen.InputPiecePosition().ToPiecePosition();
+                        chessGame.ValidateSourcePosition(source);
+
+                        bool[,] possibleMoves = chessGame.Board.Piece(source).PossibleMoves();
+
+                        Console.Clear();
+                        Screen.PrintBoard(chessGame.Board, possibleMoves);
+
+                        Console.WriteLine();
+                        Console.Write("Destiny: ");
+                        Position destiny = Screen.InputPiecePosition().ToPiecePosition();
+                        chessGame.ValidateDestinyPosition(source, destiny);
+
+                        chessGame.ExecutePlay(source, destiny);
+                    }
                     
-                    Console.WriteLine();
-                    Console.Write("Source: ");
-                    Position source = Screen.InputPiecePosition().ToPiecePosition();
+                    catch (BoardExceptions e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
 
-                    bool[,] possibleMoves = chessGame.Board.Piece(source).PossibleMoves();
-
-                    Console.Clear();
-                    Screen.PrintBoard(chessGame.Board, possibleMoves);
-
-                    Console.WriteLine();
-                    Console.Write("Destiny: ");
-                    Position destiny = Screen.InputPiecePosition().ToPiecePosition();
-
-                    chessGame.ExecuteMovement(source, destiny);
-                }                
+                }
             }
             catch (BoardExceptions e)
             {
