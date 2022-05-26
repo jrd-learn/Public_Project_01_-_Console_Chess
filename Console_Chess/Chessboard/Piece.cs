@@ -1,6 +1,6 @@
 ﻿namespace Chessboard
 {
-    internal class Piece
+    internal abstract class Piece
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
@@ -15,9 +15,7 @@
             NumMoves = 0;
         }
 
-        public void IncreaseNumMoves()
-        {
-            NumMoves++;
-        }
+        public abstract bool[,] PossibleMoves();
+        
     }
 }

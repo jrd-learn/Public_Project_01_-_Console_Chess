@@ -19,6 +19,13 @@ namespace Console_Chess
                     Console.WriteLine();
                     Console.Write("Source: ");
                     Position source = Screen.InputPiecePosition().ToPiecePosition();
+
+                    bool[,] possibleMoves = chessGame.Board.Piece(source).PossibleMoves();
+
+                    Console.Clear();
+                    Screen.PrintBoard(chessGame.Board, possibleMoves);
+
+                    Console.WriteLine();
                     Console.Write("Destiny: ");
                     Position destiny = Screen.InputPiecePosition().ToPiecePosition();
 
