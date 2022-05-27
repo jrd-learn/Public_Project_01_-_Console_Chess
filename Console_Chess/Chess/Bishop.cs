@@ -13,7 +13,7 @@ namespace Chess
             return "B";
         }
 
-        private bool CanMove(Position position) // TODO
+        private bool CanMove(Position position)
         {
             Piece piece = Board.Piece(position);
 

@@ -39,6 +39,29 @@ namespace Chess
                 Captured.Add(capturedPiece);
             }
 
+            // #SpecialMove 'Short Castling'
+            if (piece is King && destiny.Column == source.Column + 2)
+            {
+                Position rookSource = new Position(source.Row, source.Column + 3);
+                Position rookDestiny = new Position(source.Row, source.Column + 1);
+
+                Piece rook = Board.RemovePiece(rookSource);
+                rook.IncreaseNumMoves();
+                Board.InsertPiece(rook, rookDestiny);
+            }
+
+            // #SpecialMove 'Long Castling'
+            if (piece is King && destiny.Column == source.Column - 2)
+            {
+                Position rookSource = new Position(source.Row, source.Column - 4);
+                Position rookDestiny = new Position(source.Row, source.Column - 1);
+
+                Piece rook = Board.RemovePiece(rookSource);
+                rook.IncreaseNumMoves();
+                Board.InsertPiece(rook, rookDestiny);
+            }
+
+
             return capturedPiece;
         }
 
@@ -56,6 +79,28 @@ namespace Chess
             }
 
             Board.InsertPiece(piece, source);
+
+            // #SpecialMove 'Short Castling'
+            if (piece is King && destiny.Column == source.Column + 2)
+            {
+                Position rookSource = new Position(source.Row, source.Column + 3);
+                Position rookDestiny = new Position(source.Row, source.Column + 1);
+
+                Piece rook = Board.RemovePiece(rookDestiny);
+                rook.DecreaseNumMoves();
+                Board.InsertPiece(rook, rookSource);
+            }
+
+            // #SpecialMove 'Long Castling'
+            if (piece is King && destiny.Column == source.Column - 2)
+            {
+                Position rookSource = new Position(source.Row, source.Column - 4);
+                Position rookDestiny = new Position(source.Row, source.Column - 1);
+
+                Piece rook = Board.RemovePiece(rookDestiny);
+                rook.DecreaseNumMoves();
+                Board.InsertPiece(rook, rookSource);
+            }
         }
 
         public void ExecutePlay(Position source, Position destiny)
@@ -248,7 +293,7 @@ namespace Chess
             InsertNewPiece('b', 1, new Knight(Board, Color.Cyan));
             InsertNewPiece('c', 1, new Bishop(Board, Color.Cyan));
             InsertNewPiece('d', 1, new Queen(Board, Color.Cyan));
-            InsertNewPiece('e', 1, new King(Board, Color.Cyan));
+            InsertNewPiece('e', 1, new King(Board, Color.Cyan, this));
             InsertNewPiece('f', 1, new Bishop(Board, Color.Cyan));
             InsertNewPiece('g', 1, new Knight(Board, Color.Cyan));
             InsertNewPiece('h', 1, new Rook(Board, Color.Cyan));
@@ -265,7 +310,7 @@ namespace Chess
             InsertNewPiece('b', 8, new Knight(Board, Color.Magenta));
             InsertNewPiece('c', 8, new Bishop(Board, Color.Magenta));
             InsertNewPiece('d', 8, new Queen(Board, Color.Magenta));
-            InsertNewPiece('e', 8, new King(Board, Color.Magenta));
+            InsertNewPiece('e', 8, new King(Board, Color.Magenta, this));
             InsertNewPiece('f', 8, new Bishop(Board, Color.Magenta));
             InsertNewPiece('g', 8, new Knight(Board, Color.Magenta));
             InsertNewPiece('h', 8, new Rook(Board, Color.Magenta));

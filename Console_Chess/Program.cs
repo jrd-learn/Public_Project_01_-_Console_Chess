@@ -27,9 +27,7 @@ namespace Console_Chess
 
                         Console.Clear();
                         Screen.PrintBoard(chessGame.Board, possibleMoves, chessGame);
-                        // Console.Clear();
-                        // Screen.PrintChessGame(chessGame);
-
+                        
                         Console.WriteLine();
                         Console.Write("Destiny: ");
                         Position destiny = Screen.InputPiecePosition().ToPiecePosition();

@@ -4,8 +4,10 @@ namespace Chess
 {
     internal class King : Piece
     {
-        public King(Board board, Color color) : base(board, color)
+        private readonly ChessGame chessGame;
+        public King(Board board, Color color, ChessGame chessGame) : base(board, color)
         {
+            this.chessGame = chessGame;
         }
 
         public override string ToString()
@@ -18,6 +20,13 @@ namespace Chess
             Piece piece = Board.Piece(position);
 
             return piece == null || piece.Color != Color;
+        }
+
+        public bool ValidateRookForCastling(Position position)
+        {
+            Piece piece = Board.Piece(position);
+
+            return piece != null && piece is Rook && piece.Color == Color && piece.NumMoves == 0;
         }
 
         public override bool[,] PossibleMoves()
@@ -73,6 +82,38 @@ namespace Chess
             if (Board.ValidatePosition(position) && CanMove(position))
             {
                 possibleMoves[position.Row, position.Column] = true;
+            }
+
+            // #Specialmove 'castling'
+
+            if (NumMoves == 0 && !chessGame.Check)
+            {
+                Position rightRookPosititon = new Position(Position.Row, Position.Column + 3);
+
+                if (ValidateRookForCastling(rightRookPosititon)) // short castling
+                {
+                    Position position1 = new Position(Position.Row, Position.Column + 1);
+                    Position position2 = new Position(Position.Row, Position.Column + 2);
+
+                    if (Board.Piece(position1) == null && Board.Piece(position2) == null)
+                    {
+                        possibleMoves[Position.Row, Position.Column + 2] = true;
+                    }
+                }
+
+                Position leftRookPosititon = new Position(Position.Row, Position.Column - 4);
+
+                if (ValidateRookForCastling(leftRookPosititon)) // Long castling
+                {
+                    Position position1 = new Position(Position.Row, Position.Column - 1);
+                    Position position2 = new Position(Position.Row, Position.Column - 2);
+                    Position position3 = new Position(Position.Row, Position.Column - 3);
+
+                    if (Board.Piece(position1) == null && Board.Piece(position2) == null && Board.Piece(position3) == null)
+                    {
+                        possibleMoves[Position.Row, Position.Column - 2] = true;
+                    }
+                }
             }
 
             return possibleMoves;

@@ -125,6 +125,7 @@ namespace Console_Chess
             PrintCapturedPieces(chessGame);
             Console.WriteLine();
             Console.WriteLine($"Turn: {chessGame.Turn}");
+            Console.WriteLine($"Waiting player: {chessGame.CurrentPlayer}");
         }
 
         public static PiecePosition InputPiecePosition()

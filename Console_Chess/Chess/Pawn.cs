@@ -46,7 +46,7 @@ namespace Chess
                     possibleMoves[position.Row, position.Column] = true;
                 }
 
-                position.SetValue(Position.Row - 1, Position.Column -1);
+                position.SetValue(Position.Row - 1, Position.Column - 1);
                 if (Board.ValidatePosition(position) && ValidateOpposite(position))
                 {
                     possibleMoves[position.Row, position.Column] = true;

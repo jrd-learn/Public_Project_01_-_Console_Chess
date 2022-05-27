@@ -20,7 +20,7 @@ namespace Chess
             return piece == null || piece.Color != Color;
         }
 
-        public override bool[,] PossibleMoves() // TODO
+        public override bool[,] PossibleMoves()
         {
             bool[,] possibleMoves = new bool[Board.Rows, Board.Columns];
 
