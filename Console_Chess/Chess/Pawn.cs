@@ -4,8 +4,10 @@ namespace Chess
 {
     internal class Pawn : Piece
     {
-        public Pawn(Board board, Color color) : base(board, color)
+        private ChessGame chessGame;
+        public Pawn(Board board, Color color, ChessGame chessGame) : base(board, color)
         {
+            this.chessGame = chessGame;
         }
 
         public override string ToString()
@@ -57,6 +59,24 @@ namespace Chess
                 {
                     possibleMoves[position.Row, position.Column] = true;
                 }
+
+                // # SpecialMove En Passant
+                if (Position.Row == 3)
+                {
+                    Position leftSide = new Position(Position.Row, Position.Column - 1);
+
+                    if (Board.ValidatePosition(leftSide) && ValidateOpposite(leftSide) && Board.Piece(leftSide) == chessGame.VunerableEnPassant)
+                    {
+                        possibleMoves[leftSide.Row - 1, leftSide.Column] = true;
+                    }
+
+                    Position rightSide = new Position(Position.Row, Position.Column + 1);
+
+                    if (Board.ValidatePosition(rightSide) && ValidateOpposite(rightSide) && Board.Piece(rightSide) == chessGame.VunerableEnPassant)
+                    {
+                        possibleMoves[rightSide.Row - 1, rightSide.Column] = true;
+                    }
+                }
             }
             else
             {
@@ -82,6 +102,24 @@ namespace Chess
                 if (Board.ValidatePosition(position) && ValidateOpposite(position))
                 {
                     possibleMoves[position.Row, position.Column] = true;
+                }
+
+                // # SpecialMove En Passant
+                if (Position.Row == 4)
+                {
+                    Position leftSide = new Position(Position.Row, Position.Column - 1);
+
+                    if (Board.ValidatePosition(leftSide) && ValidateOpposite(leftSide) && Board.Piece(leftSide) == chessGame.VunerableEnPassant)
+                    {
+                        possibleMoves[leftSide.Row + 1, leftSide.Column] = true;
+                    }
+
+                    Position rightSide = new Position(Position.Row, Position.Column + 1);
+
+                    if (Board.ValidatePosition(rightSide) && ValidateOpposite(rightSide) && Board.Piece(rightSide) == chessGame.VunerableEnPassant)
+                    {
+                        possibleMoves[rightSide.Row + 1, rightSide.Column] = true;
+                    }
                 }
             }
             
