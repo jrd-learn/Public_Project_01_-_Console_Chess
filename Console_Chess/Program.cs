@@ -16,10 +16,7 @@ namespace Console_Chess
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(chessGame.Board);
-                        Console.WriteLine();
-                        Console.WriteLine($"Turn: {chessGame.Turn}");
-                        Console.WriteLine($"Waiting player: {chessGame.CurrentPlayer}");
+                        Screen.PrintChessGame(chessGame);
 
                         Console.WriteLine();
                         Console.Write("Source: ");

@@ -15,6 +15,15 @@
             NumMoves = 0;
         }
 
+        public void IncreaseNumMoves()
+        {
+            NumMoves++;
+        }
+        public void DecreaseNumMoves()
+        {
+            NumMoves--;
+        }
+
         public bool CheckPossibleMoves()
         {
             bool[,] checkPossibleMoves = PossibleMoves();

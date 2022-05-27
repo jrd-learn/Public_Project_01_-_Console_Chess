@@ -9,6 +9,9 @@ namespace Chess
         public int Turn { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool GameOver { get; private set; }
+        public bool Check { get; private set; }
+        private HashSet<Piece> Pieces;
+        private HashSet<Piece> Captured;
 
         public ChessGame()
         {
@@ -16,21 +19,66 @@ namespace Chess
             Turn = 1;
             CurrentPlayer = Color.Cyan;
             GameOver = false;
+            Check = false;
+            Pieces = new HashSet<Piece>();
+            Captured = new HashSet<Piece>();
             PutPieces();
         }
 
-        public void ExecuteMovement(Position source, Position destiny)
+        public Piece ExecuteMovement(Position source, Position destiny)
         {
             Piece piece = Board.RemovePiece(source);
             
-            Piece pieceCapturated = Board.RemovePiece(destiny);
+            piece.IncreaseNumMoves();
+            
+            Piece capturedPiece = Board.RemovePiece(destiny);
 
             Board.InsertPiece(piece, destiny);
+
+            if (capturedPiece != null)
+            {
+                Captured.Add(capturedPiece);
+            }
+
+            return capturedPiece;
+        }
+
+        public void RollbackMove(Position source, Position destiny, Piece capturedPiece)
+        {
+            Piece piece = Board.RemovePiece(destiny);
+
+            piece.DecreaseNumMoves();
+
+            if (capturedPiece != null)
+            {
+                Board.InsertPiece(capturedPiece, destiny);
+
+                Captured.Remove(capturedPiece);
+            }
+
+            Board.InsertPiece(piece, source);
         }
 
         public void ExecutePlay(Position source, Position destiny)
         {
-            ExecuteMovement(source, destiny);
+            Piece capturedPiece = ExecuteMovement(source, destiny);
+
+            if (ValidateCheck(CurrentPlayer))
+            {
+                RollbackMove(source, destiny, capturedPiece);
+
+                throw new BoardExceptions("Illegal move... Your king will be in check mode!");
+            }
+
+            if (ValidateCheck(Opponent(CurrentPlayer)))
+            {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
+
             Turn++;
             ChangePlayer();
         }
@@ -70,25 +118,128 @@ namespace Chess
                 CurrentPlayer = Color.Cyan;
             }
         }
+
+        public HashSet<Piece> CapturedPieces(Color color)
+        {
+            HashSet<Piece> captPieces = new HashSet<Piece>();
+
+            foreach (Piece piece in Captured)
+            {
+                if (piece.Color == color)
+                {
+                    captPieces.Add(piece);
+                }
+            }
+
+            return captPieces;
+        }
+
+        public HashSet<Piece> InGamePieces(Color color)
+        {
+            HashSet<Piece> inGamePieces = new HashSet<Piece>();
+
+            foreach (Piece piece in Pieces)
+            {
+                if (piece.Color == color)
+                {
+                    inGamePieces.Add(piece);
+                }
+            }
+
+            inGamePieces.ExceptWith(CapturedPieces(color));
+
+            return inGamePieces;
+        }
+
+        private Color Opponent(Color color)
+        {
+            if (color == Color.Cyan)
+            {
+                return Color.Magenta;
+            }
+            else
+            {
+                return Color.Cyan;
+            }
+        }
+
+        private Piece ValidateKing(Color color)
+        {
+            foreach(Piece piece in InGamePieces(color))
+            {
+                if (piece is King)
+                {
+                    return piece;
+                }
+            }
+
+            return null;
+        }
+
+        public bool ValidateCheck(Color color)
+        {
+            Piece king = ValidateKing(color);
+            if (king == null)
+            {
+                throw new BoardExceptions($"King {king} was not found in this board!");
+            }
+
+            foreach (Piece piece in InGamePieces(Opponent(color)))
+            {
+                bool[,] validadeCheck = piece.PossibleMoves();
+
+                if (validadeCheck[king.Position.Row, king.Position.Column])
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void InsertNewPiece(char column, int row, Piece piece)
+        {
+            Board.InsertPiece(piece, new PiecePosition(column, row).ToPiecePosition());
+            Pieces.Add(piece);
+        }
+
         private void PutPieces()
         {
-            Board.InsertPiece(new Rook(Board, Color.Cyan), new PiecePosition('a', 1).ToPiecePosition());
-            Board.InsertPiece(new Knight(Board, Color.Cyan), new PiecePosition('b', 1).ToPiecePosition());
-            Board.InsertPiece(new Bishop(Board, Color.Cyan), new PiecePosition('c', 1).ToPiecePosition());
-            Board.InsertPiece(new Queen(Board, Color.Cyan), new PiecePosition('d', 1).ToPiecePosition());
-            Board.InsertPiece(new King(Board, Color.Cyan), new PiecePosition('e', 1).ToPiecePosition());
-            Board.InsertPiece(new Bishop(Board, Color.Cyan), new PiecePosition('f', 1).ToPiecePosition());
-            Board.InsertPiece(new Knight(Board, Color.Cyan), new PiecePosition('g', 1).ToPiecePosition());
-            Board.InsertPiece(new Rook(Board, Color.Cyan), new PiecePosition('h', 1).ToPiecePosition());
+            InsertNewPiece('a', 1, new Rook(Board, Color.Cyan));
+            InsertNewPiece('b', 1, new Knight(Board, Color.Cyan));
+            InsertNewPiece('c', 1, new Bishop(Board, Color.Cyan));
+            InsertNewPiece('d', 1, new Queen(Board, Color.Cyan));
+            InsertNewPiece('e', 1, new King(Board, Color.Cyan));
+            InsertNewPiece('f', 1, new Bishop(Board, Color.Cyan));
+            InsertNewPiece('g', 1, new Knight(Board, Color.Cyan));
+            InsertNewPiece('h', 1, new Rook(Board, Color.Cyan));
+            //InsertNewPiece('a', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('b', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('c', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('d', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('e', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('f', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('g', 2, new Pawn(Board, Color.Cyan));
+            //InsertNewPiece('h', 2, new Pawn(Board, Color.Cyan));
 
-            Board.InsertPiece(new Rook(Board, Color.Magenta), new PiecePosition('a', 8).ToPiecePosition());
-            Board.InsertPiece(new Knight(Board, Color.Magenta), new PiecePosition('b', 8).ToPiecePosition());
-            Board.InsertPiece(new Bishop(Board, Color.Magenta), new PiecePosition('c', 8).ToPiecePosition());
-            Board.InsertPiece(new Queen(Board, Color.Magenta), new PiecePosition('d', 8).ToPiecePosition());
-            Board.InsertPiece(new King(Board, Color.Magenta), new PiecePosition('e', 8).ToPiecePosition());
-            Board.InsertPiece(new Bishop(Board, Color.Magenta), new PiecePosition('f', 8).ToPiecePosition());
-            Board.InsertPiece(new Knight(Board, Color.Magenta), new PiecePosition('g', 8).ToPiecePosition());
-            Board.InsertPiece(new Rook(Board, Color.Magenta), new PiecePosition('h', 8).ToPiecePosition());
+            InsertNewPiece('a', 8, new Rook(Board, Color.Magenta));
+            InsertNewPiece('b', 8, new Knight(Board, Color.Magenta));
+            InsertNewPiece('c', 8, new Bishop(Board, Color.Magenta));
+            InsertNewPiece('d', 8, new Queen(Board, Color.Magenta));
+            InsertNewPiece('e', 8, new King(Board, Color.Magenta));
+            InsertNewPiece('f', 8, new Bishop(Board, Color.Magenta));
+            InsertNewPiece('g', 8, new Knight(Board, Color.Magenta));
+            InsertNewPiece('h', 8, new Rook(Board, Color.Magenta));
+            //InsertNewPiece('a', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('b', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('c', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('d', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('e', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('f', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('g', 7, new Pawn(Board, Color.Magenta));
+            //InsertNewPiece('h', 7, new Pawn(Board, Color.Magenta));
+
+
         }
     }
 }
