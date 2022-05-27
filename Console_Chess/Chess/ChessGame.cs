@@ -160,6 +160,24 @@ namespace Chess
                 throw new BoardExceptions("Illegal move... Your king will be in check mode!");
             }
 
+            Piece piece = Board.Piece(destiny);
+
+            // #SpecialMove 'Promotion'
+            if (piece is Pawn)
+            {
+                if (piece.Color == Color.Cyan && destiny.Row == 0 || piece.Color == Color.Magenta && destiny.Row == 7)
+                {
+                    piece = Board.RemovePiece(destiny);
+                    Pieces.Remove(piece);
+
+                    Piece queen = new Queen(Board, piece.Color);
+                    Board.InsertPiece(queen, destiny);
+
+                    Pieces.Add(queen);
+                }
+            }
+
+
             if (ValidateCheck(Opponent(CurrentPlayer)))
             {
                 Check = true;
@@ -180,8 +198,7 @@ namespace Chess
             }
 
 
-            // # SpecialMove En Passant
-            Piece piece = Board.Piece(destiny);
+            // #SpecialMove En Passant            
 
             if (piece is Pawn && (destiny.Row == source.Row - 2 || destiny.Row == source.Row + 2))
             {
