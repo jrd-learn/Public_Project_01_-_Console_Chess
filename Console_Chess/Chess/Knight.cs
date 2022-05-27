@@ -10,7 +10,7 @@ namespace Chess
 
         public override string ToString()
         {
-            return "C";
+            return "N";
         }
 
         private bool CanMove(Position position)
@@ -25,20 +25,54 @@ namespace Chess
             bool[,] possibleMoves = new bool[Board.Rows, Board.Columns];
 
             Position position = new Position(0, 0);
-
-            //North
-            position.SetValue(Position.Row - 1, Position.Column);
-            while (Board.ValidatePosition(position) && CanMove(position))
+                        
+            position.SetValue(Position.Row - 1, Position.Column - 2);
+            if (Board.ValidatePosition(position) && CanMove(position))
             {
-                possibleMoves[Position.Row, Position.Column] = true;
+                possibleMoves[position.Row, position.Column] = true;
+            }
 
-                if (Board.Piece(position) != null && Board.Piece(position).Color != Color)
-                {
-                    break;
-                }
+            position.SetValue(Position.Row - 2, Position.Column - 1);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
 
-                position.Row--;
-            }            
+            position.SetValue(Position.Row - 2, Position.Column + 1);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
+
+            position.SetValue(Position.Row - 1, Position.Column + 2);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
+
+            position.SetValue(Position.Row + 1, Position.Column + 2);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
+
+            position.SetValue(Position.Row + 2, Position.Column + 1);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
+
+            position.SetValue(Position.Row + 2, Position.Column - 1);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
+
+            position.SetValue(Position.Row + 1, Position.Column - 2);
+            if (Board.ValidatePosition(position) && CanMove(position))
+            {
+                possibleMoves[position.Row, position.Column] = true;
+            }
 
             return possibleMoves;
         }
