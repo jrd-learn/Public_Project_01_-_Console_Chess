@@ -10,15 +10,39 @@ namespace Console_Chess
         {
             PrintBoard(chessGame.Board);
             Console.WriteLine();
-            PrintCapturedPieces(chessGame);
-            Console.WriteLine();
+            PrintCapturedPieces(chessGame);            
             Console.WriteLine();
             Console.WriteLine($"Turn: {chessGame.Turn}");
-            Console.WriteLine($"Waiting player: {chessGame.CurrentPlayer}");
-            if (chessGame.Check)
+
+            if (!chessGame.GameOver)
             {
-                Console.WriteLine("Check!");
+                Console.WriteLine($"Waiting player: {chessGame.CurrentPlayer}");
+                if (chessGame.Check)
+                {
+                    Console.WriteLine("Check!");
+                }
             }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("C H E C K M A T E !");
+                Console.Write("{ Winner: ");
+                ConsoleColor defaultForeground = Console.ForegroundColor;
+                if (chessGame.CurrentPlayer == Color.Cyan)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }                
+                Console.Write($"{chessGame.CurrentPlayer.ToString().ToUpper()}");
+
+                Console.ForegroundColor = defaultForeground;
+                Console.Write(" }");
+
+            }
+            
         }
 
         public static void PrintCapturedPieces(ChessGame chessGame)
@@ -65,7 +89,7 @@ namespace Console_Chess
             Console.WriteLine("+  A  B  C  D  E  F  G  H");
         }
 
-        public static void PrintBoard(Board board, bool[,] possibleMoves)
+        public static void PrintBoard(Board board, bool[,] possibleMoves, ChessGame chessGame)
         {
             ConsoleColor defaultBackground = Console.BackgroundColor;
             ConsoleColor newBackground = ConsoleColor.DarkGray;
@@ -96,6 +120,11 @@ namespace Console_Chess
             Console.WriteLine("+  A  B  C  D  E  F  G  H");
 
             Console.BackgroundColor = defaultBackground;
+
+            Console.WriteLine();
+            PrintCapturedPieces(chessGame);
+            Console.WriteLine();
+            Console.WriteLine($"Turn: {chessGame.Turn}");
         }
 
         public static PiecePosition InputPiecePosition()

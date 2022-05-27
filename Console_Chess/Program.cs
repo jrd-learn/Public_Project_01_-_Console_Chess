@@ -22,11 +22,13 @@ namespace Console_Chess
                         Console.Write("Source: ");
                         Position source = Screen.InputPiecePosition().ToPiecePosition();
                         chessGame.ValidateSourcePosition(source);
-
+                        
                         bool[,] possibleMoves = chessGame.Board.Piece(source).PossibleMoves();
 
                         Console.Clear();
-                        Screen.PrintBoard(chessGame.Board, possibleMoves);
+                        Screen.PrintBoard(chessGame.Board, possibleMoves, chessGame);
+                        // Console.Clear();
+                        // Screen.PrintChessGame(chessGame);
 
                         Console.WriteLine();
                         Console.Write("Destiny: ");
@@ -41,6 +43,9 @@ namespace Console_Chess
                         Console.WriteLine(e.Message);
                         Console.ReadLine();
                     }
+
+                    Console.Clear();
+                    Screen.PrintChessGame(chessGame);
 
                 }
             }
